@@ -6,6 +6,7 @@ import java.util.List;
 public class MatrixH {
     public double[][] H = new double[4][4];
     public double[][] globalH = new double[16][16];
+    public double[] globalVectorP = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     public List<List<Double>> Hglobal = new ArrayList<>();
     List<Matrix> matrixList = new ArrayList<>();
 
@@ -24,12 +25,6 @@ public class MatrixH {
         boolean[] HBC = new boolean[4];
         Node[] nodes = new Node[4];
         Side side = new Side();
-        double[][] PomSide = {
-                {0, 0, 0, 0},
-                {0, 0, 0, 0},
-                {0, 0, 0, 0},
-                {0, 0, 0, 0}
-        };
         List<List<Double>> dNdX = new ArrayList<>(4);
         List<List<Double>> dNdY = new ArrayList<>(4);
 
@@ -42,52 +37,6 @@ public class MatrixH {
 
                 calculations(element4, globalData, grid, number, x, y, dNdX, dNdY, i);
 
-                for (int j = 0; j < 4; j++) {
-                    HBC[j] = grid.Nodes.get(grid.Elements.get(i).ID[j] - 1).BC;
-                    nodes[j] = grid.Nodes.get(grid.Elements.get(i).ID[j] - 1);
-                }
-
-                if (HBC[0] && HBC[1]){
-                    side.matrix(number, nodes[0], nodes[1], globalData);
-                    for (int j = 0; j < 4; j++) {
-                        for (int k = 0; k < 4; k++) {
-                            PomSide[j][k] += side.side1[j][k];
-                        }
-                    }
-                }
-                if (HBC[1] && HBC[2]){
-                    side.matrix(number, nodes[1], nodes[2], globalData);
-                    for (int j = 0; j < 4; j++) {
-                        for (int k = 0; k < 4; k++) {
-                            PomSide[j][k] += side.side2[j][k];
-                        }
-                    }
-                }
-                if (HBC[2] && HBC[3]){
-                    side.matrix(number, nodes[2], nodes[3], globalData);
-                    for (int j = 0; j < 4; j++) {
-                        for (int k = 0; k < 4; k++) {
-                            PomSide[j][k] += side.side3[j][k];
-                        }
-                    }
-                }
-                if (HBC[3] && HBC[0]){
-                    side.matrix(number, nodes[3], nodes[0], globalData);
-                    for (int j = 0; j < 4; j++) {
-                        for (int k = 0; k < 4; k++) {
-                            PomSide[j][k] += side.side4[j][k];
-                        }
-                    }
-                }
-
-                System.out.println("----------------"+i+"-------------------------");
-                for (int j = 0; j < 4; j++) {
-                    for (int k = 0; k < 4; k++) {
-                        System.out.print(PomSide[j][k]+"\t");
-                    }
-                    System.out.println();
-                }
-
                 for (int a = 0; a < 4; a++) {
                     for (int b = 0; b < 4; b++) {
                         for (int k = 0; k < 4; k++) {
@@ -96,22 +45,10 @@ public class MatrixH {
                     }
                 }
 
-
-                for (int j = 0; j < 4; j++) {
-                    for (int k = 0; k < 4; k++) {
-                         this.H[j][k] += PomSide[j][k];
-                    }
-                }
-
-
+                addBC(globalData, grid, number, HBC, nodes, side, i);
 
                 agregacja(grid, i);
 
-                for (int j = 0; j < 4; j++) {
-                    for (int k = 0; k < 4; k++) {
-                        PomSide[j][k]=0;
-                    }
-                }
             }
 
         }
@@ -132,10 +69,9 @@ public class MatrixH {
                     }
                 }
 
-
-
-                agregacja(grid, i);
+                addBC(globalData, grid, number, HBC, nodes, side, i);
                 //printHlocal();
+                agregacja(grid, i);
             }
         }
         if (number == 4) {
@@ -155,12 +91,64 @@ public class MatrixH {
                     }
                 }
 
-                agregacja(grid, i);
+                addBC(globalData, grid, number, HBC, nodes, side, i);
 
+                agregacja(grid, i);
                 //printHlocal();
 
             }
         }
+    }
+
+    private void addBC(GlobalData globalData, Grid grid, int number, boolean[] HBC, Node[] nodes, Side side, int i) {
+        for (int j = 0; j < 4; j++) {
+            HBC[j] = grid.Nodes.get(grid.Elements.get(i).ID[j] - 1).BC;
+            nodes[j] = grid.Nodes.get(grid.Elements.get(i).ID[j] - 1);
+        }
+
+        if (HBC[0] && HBC[1]){
+            side.matrix(number, nodes[0], nodes[1], globalData);
+            for (int j = 0; j < 4; j++) {
+                for (int k = 0; k < 4; k++) {
+                    this.H[j][k] += side.side1[j][k];
+                }
+                grid.Elements.get(i).vectorP[j] += side.vectorP1[j];
+            }
+
+        }
+        if (HBC[1] && HBC[2]){
+            side.matrix(number, nodes[1], nodes[2], globalData);
+            for (int j = 0; j < 4; j++) {
+                for (int k = 0; k < 4; k++) {
+                    this.H[j][k] += side.side2[j][k];
+                }
+                grid.Elements.get(i).vectorP[j] += side.vectorP2[j];
+            }
+        }
+        if (HBC[2] && HBC[3]){
+            side.matrix(number, nodes[2], nodes[3], globalData);
+            for (int j = 0; j < 4; j++) {
+                for (int k = 0; k < 4; k++) {
+                    this.H[j][k] += side.side3[j][k];
+                }
+                grid.Elements.get(i).vectorP[j] += side.vectorP3[j];
+            }
+        }
+        if (HBC[3] && HBC[0]){
+            side.matrix(number, nodes[3], nodes[0], globalData);
+            for (int j = 0; j < 4; j++) {
+                for (int k = 0; k < 4; k++) {
+                    this.H[j][k] += side.side4[j][k];
+                }
+                grid.Elements.get(i).vectorP[j] += side.vectorP4[j];
+            }
+        }
+
+        System.out.println("---------------------------------");
+        for (int j = 0; j < 4; j++) {
+            System.out.println(grid.Elements.get(i).vectorP[j] +"\t");
+        }
+
     }
 
     private void agregacja(Grid grid, int i) {
@@ -172,6 +160,7 @@ public class MatrixH {
                 this.globalH[grid.Elements.get(i).ID[k] - 1][grid.Elements.get(i).ID[l] - 1] += this.H[k][l];
                 this.H[k][l] = 0;
             }
+            this.globalVectorP[grid.Elements.get(i).ID[k] - 1] += grid.Elements.get(i).vectorP[k];
         }
     }
 

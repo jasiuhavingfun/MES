@@ -28,7 +28,10 @@ public class Side {
             {0, 0, 0, 0},
             {0, 0, 0, 0}
     };
-
+    public double[] vectorP1 = {0,0,0,0};
+    public double[] vectorP2 = {0,0,0,0};
+    public double[] vectorP3 = {0,0,0,0};
+    public double[] vectorP4 = {0,0,0,0};
     private double N1(double ksi, double eta) {
         return 0.25 * (1 - ksi) * (1 - eta);
     }
@@ -107,6 +110,7 @@ public class Side {
                 NforPC2[i] = N(i, SC.PC2[1], -1);
             }
 
+            calcVerctorPC2(globalData, NforPC1, NforPC2, detJ, vectorP1);
             calcSidePC2(globalData, NforPC1, NforPC2, detJ, side1);
 
             for (int i = 0; i < 4; i++) {
@@ -114,6 +118,7 @@ public class Side {
                 NforPC2[i] = N(i, 1, SC.PC2[1]);
             }
 
+            calcVerctorPC2(globalData, NforPC1, NforPC2, detJ, vectorP2);
             calcSidePC2(globalData, NforPC1, NforPC2, detJ, side2);
 
             for (int i = 0; i < 4; i++) {
@@ -121,22 +126,25 @@ public class Side {
                 NforPC2[i] = N(i, SC.PC2[1], 1);
             }
 
+            calcVerctorPC2(globalData, NforPC1, NforPC2, detJ, vectorP3);
             calcSidePC2(globalData, NforPC1, NforPC2, detJ, side3);
+
 
             for (int i = 0; i < 4; i++) {
                 NforPC1[i] = N(i, -1, SC.PC2[0]);
                 NforPC2[i] = N(i, -1, SC.PC2[1]);
             }
 
+            calcVerctorPC2(globalData, NforPC1, NforPC2, detJ, vectorP4);
             calcSidePC2(globalData, NforPC1, NforPC2, detJ, side4);
 
 
+            //printVectors(vectorP1, vectorP2);
+            //printVectors(vectorP3, vectorP4);
 //            printSide(side1);
 //            printSide(side2);
 //            printSide(side3);
 //            printSide(side4);
-
-
         }
         if (number == 3) {
 
@@ -147,6 +155,7 @@ public class Side {
             }
 
             calcSidePC3(globalData, NforPC1, NforPC2, NforPC3, pom1, pom2, pom3, detJ, side1);
+            calcVectorPC3(globalData, NforPC1, NforPC2, NforPC3, detJ, vectorP1);
 
             for (int i = 0; i < 4; i++) {
                 NforPC1[i] = N(i, 1, SC.PC3[0]);
@@ -154,6 +163,7 @@ public class Side {
                 NforPC3[i] = N(i, 1, SC.PC3[2]);
             }
 
+            calcVectorPC3(globalData, NforPC1, NforPC2, NforPC3, detJ, vectorP2);
             calcSidePC3(globalData, NforPC1, NforPC2, NforPC3, pom1, pom2, pom3, detJ, side2);
 
             for (int i = 0; i < 4; i++) {
@@ -163,6 +173,7 @@ public class Side {
             }
 
             calcSidePC3(globalData, NforPC1, NforPC2, NforPC3, pom1, pom2, pom3, detJ, side3);
+            calcVectorPC3(globalData, NforPC1, NforPC2, NforPC3, detJ, vectorP3);
 
             for (int i = 0; i < 4; i++) {
                 NforPC1[i] = N(i, -1, SC.PC3[0]);
@@ -171,6 +182,7 @@ public class Side {
             }
 
             calcSidePC3(globalData, NforPC1, NforPC2, NforPC3, pom1, pom2, pom3, detJ, side4);
+            calcVectorPC3(globalData, NforPC1, NforPC2, NforPC3, detJ, vectorP4);
 
 //            printSide(side1);
 //            printSide(side2);
@@ -186,6 +198,7 @@ public class Side {
                 NforPC4[i] = N(i, SC.PC4[3], -1);
             }
             calcSidePC4(globalData, NforPC1, NforPC2, NforPC3, NforPC4, pom1, pom2, pom3, pom4, detJ, side1);
+            calcVectorPC4(globalData, NforPC1, NforPC2, NforPC3, NforPC4, detJ, vectorP1);
 
             for (int i = 0; i < 4; i++) {
                 NforPC1[i] = N(i, 1,SC.PC4[0]);
@@ -193,7 +206,9 @@ public class Side {
                 NforPC3[i] = N(i, 1, SC.PC4[2]);
                 NforPC4[i] = N(i, 1, SC.PC4[3]);
             }
+            calcVectorPC4(globalData, NforPC1, NforPC2, NforPC3, NforPC4, detJ, vectorP2);
             calcSidePC4(globalData, NforPC1, NforPC2, NforPC3, NforPC4, pom1, pom2, pom3, pom4, detJ, side2);
+
 
             for (int i = 0; i < 4; i++) {
                 NforPC1[i] = N(i, SC.PC4[0],1);
@@ -202,6 +217,7 @@ public class Side {
                 NforPC4[i] = N(i, SC.PC4[3], 1);
             }
             calcSidePC4(globalData, NforPC1, NforPC2, NforPC3, NforPC4, pom1, pom2, pom3, pom4, detJ, side3);
+            calcVectorPC4(globalData, NforPC1, NforPC2, NforPC3, NforPC4, detJ, vectorP3);
 
             for (int i = 0; i < 4; i++) {
                 NforPC1[i] = N(i, -1,SC.PC4[0]);
@@ -210,6 +226,7 @@ public class Side {
                 NforPC4[i] = N(i, -1, SC.PC4[3]);
             }
             calcSidePC4(globalData, NforPC1, NforPC2, NforPC3, NforPC4, pom1, pom2, pom3, pom4, detJ, side4);
+            calcVectorPC4(globalData, NforPC1, NforPC2, NforPC3, NforPC4, detJ, vectorP4);
 
 //            printSide(side1);
 //            printSide(side2);
@@ -217,6 +234,44 @@ public class Side {
 //            printSide(side4);
         }
 
+    }
+
+    private void calcVectorPC4(GlobalData globalData, double[] nforPC1, double[] nforPC2, double[] nforPC3, double[] nforPC4, double detJ, double[] vectorP2) {
+        for (int i = 0; i < 4; i++) {
+            vectorP2[i] = nforPC1[i] * globalData.Tot * SC.W4[0];
+            vectorP2[i] += nforPC2[i] * globalData.Tot * SC.W4[1];
+            vectorP2[i] += nforPC3[i] * globalData.Tot * SC.W4[2];
+            vectorP2[i] += nforPC4[i] * globalData.Tot * SC.W4[3];
+            vectorP2[i] *= detJ * globalData.Alfa;
+        }
+    }
+
+    private void printVectors(double[] vectorP1, double[] vectorP2) {
+        System.out.println("---------------------------------");
+        for (int i = 0; i < 4; i++) {
+            System.out.println(vectorP1[i]+"\t");
+        }
+        System.out.println("---------------------------------");
+        for (int i = 0; i < 4; i++) {
+            System.out.println(vectorP2[i]+"\t");
+        }
+    }
+
+    private void calcVerctorPC2(GlobalData globalData, double[] nforPC1, double[] nforPC2, double detJ, double[] vectorP3) {
+        for (int i = 0; i < 4; i++) {
+            vectorP3[i] = nforPC1[i] * globalData.Tot;
+            vectorP3[i] += nforPC2[i] * globalData.Tot;
+            vectorP3[i] *= detJ * globalData.Alfa;
+        }
+    }
+
+    private void calcVectorPC3(GlobalData globalData, double[] nforPC1, double[] nforPC2, double[] nforPC3, double detJ, double[] vectorP2) {
+        for (int i = 0; i < 4; i++) {
+            vectorP2[i] = nforPC1[i] * globalData.Tot * SC.W3[0];
+            vectorP2[i] += nforPC2[i] * globalData.Tot * SC.W3[1];
+            vectorP2[i] += nforPC3[i] * globalData.Tot * SC.W3[2];
+            vectorP2[i] *= detJ * globalData.Alfa;
+        }
     }
 
     private void calcSidePC3(GlobalData globalData, double[] nforPC1, double[] nforPC2, double[] nforPC3, double[][] pom1, double[][] pom2, double[][] pom3, double detJ, double[][] side) {

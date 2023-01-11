@@ -19,6 +19,11 @@ public class Main {
         MatrixH matrixH = new MatrixH();
         matrixH.calculateH(element4, globalData, grid, 2);
 
+//        System.out.println("-------------------------------------------");
+//        for (int i = 0; i < 16; i++) {
+//            System.out.println(i +"\t"+matrixH.globalVectorP[i]);
+//        }
+
 
 //        for (int i = 0; i < 16; i++) {
 //            for (int j = 0; j < 16; j++) {
@@ -28,13 +33,13 @@ public class Main {
 //        }
 
 
-        DecimalFormat dec = new DecimalFormat("#0.00");
-        for (int i = 0; i < grid.Nodes_number; i++) {
-            for (int j = 0; j < grid.Nodes_number; j++) {
-                System.out.print(dec.format(matrixH.globalH[i][j]) +"\t");
-            }
-            System.out.println();
-        }
+//        DecimalFormat dec = new DecimalFormat("#0.00");
+//        for (int i = 0; i < grid.Nodes_number; i++) {
+//            for (int j = 0; j < grid.Nodes_number; j++) {
+//                System.out.print(dec.format(matrixH.globalH[i][j]) +"\t");
+//            }
+//            System.out.println();
+//        }
 
 
 //        Node one = new Node();
@@ -47,7 +52,7 @@ public class Main {
 //
 //        Side side = new Side();
 //
-//        side.matrix(2, one, two, globalData);
+//        side.matrix(4, one, two, globalData);
 
 //        for (int i = 0; i < grid.Nodes_number; i++) {
 //            for (int j = 0; j < grid.Nodes_number; j++) {
