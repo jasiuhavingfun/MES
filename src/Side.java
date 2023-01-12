@@ -1,9 +1,6 @@
 import static java.lang.Math.sqrt;
 
 public class Side {
-    private int number;
-    private Node one;
-    private Node two;
     public double[][] side1 = { // N1 N2
             {0, 0, 0, 0},
             {0, 0, 0, 0},
@@ -28,25 +25,10 @@ public class Side {
             {0, 0, 0, 0},
             {0, 0, 0, 0}
     };
-    public double[] vectorP1 = {0,0,0,0};
-    public double[] vectorP2 = {0,0,0,0};
-    public double[] vectorP3 = {0,0,0,0};
-    public double[] vectorP4 = {0,0,0,0};
-    private double N1(double ksi, double eta) {
-        return 0.25 * (1 - ksi) * (1 - eta);
-    }
-
-    private double N2(double ksi, double eta) {
-        return 0.25 * (1 + ksi) * (1 - eta);
-    }
-
-    private double N3(double ksi, double eta) {
-        return 0.25 * (1 + ksi) * (1 + eta);
-    }
-
-    private double N4(double ksi, double eta) {
-        return 0.25 * (1 - ksi) * (1 + eta);
-    }
+    public double[] vectorP1 = {0, 0, 0, 0};
+    public double[] vectorP2 = {0, 0, 0, 0};
+    public double[] vectorP3 = {0, 0, 0, 0};
+    public double[] vectorP4 = {0, 0, 0, 0};
 
     private double N(int number, double ksi, double eta) {
         switch (number) {
@@ -66,7 +48,6 @@ public class Side {
                 return 0;
             }
         }
-
     }
 
     public void matrix(int number, Node first, Node second, GlobalData globalData) {
@@ -192,7 +173,7 @@ public class Side {
 
         if (number == 4) {
             for (int i = 0; i < 4; i++) {
-                NforPC1[i] = N(i, SC.PC4[0],-1);
+                NforPC1[i] = N(i, SC.PC4[0], -1);
                 NforPC2[i] = N(i, SC.PC4[1], -1);
                 NforPC3[i] = N(i, SC.PC4[2], -1);
                 NforPC4[i] = N(i, SC.PC4[3], -1);
@@ -201,7 +182,7 @@ public class Side {
             calcVectorPC4(globalData, NforPC1, NforPC2, NforPC3, NforPC4, detJ, vectorP1);
 
             for (int i = 0; i < 4; i++) {
-                NforPC1[i] = N(i, 1,SC.PC4[0]);
+                NforPC1[i] = N(i, 1, SC.PC4[0]);
                 NforPC2[i] = N(i, 1, SC.PC4[1]);
                 NforPC3[i] = N(i, 1, SC.PC4[2]);
                 NforPC4[i] = N(i, 1, SC.PC4[3]);
@@ -211,7 +192,7 @@ public class Side {
 
 
             for (int i = 0; i < 4; i++) {
-                NforPC1[i] = N(i, SC.PC4[0],1);
+                NforPC1[i] = N(i, SC.PC4[0], 1);
                 NforPC2[i] = N(i, SC.PC4[1], 1);
                 NforPC3[i] = N(i, SC.PC4[2], 1);
                 NforPC4[i] = N(i, SC.PC4[3], 1);
@@ -220,7 +201,7 @@ public class Side {
             calcVectorPC4(globalData, NforPC1, NforPC2, NforPC3, NforPC4, detJ, vectorP3);
 
             for (int i = 0; i < 4; i++) {
-                NforPC1[i] = N(i, -1,SC.PC4[0]);
+                NforPC1[i] = N(i, -1, SC.PC4[0]);
                 NforPC2[i] = N(i, -1, SC.PC4[1]);
                 NforPC3[i] = N(i, -1, SC.PC4[2]);
                 NforPC4[i] = N(i, -1, SC.PC4[3]);
@@ -249,11 +230,11 @@ public class Side {
     private void printVectors(double[] vectorP1, double[] vectorP2) {
         System.out.println("---------------------------------");
         for (int i = 0; i < 4; i++) {
-            System.out.println(vectorP1[i]+"\t");
+            System.out.println(vectorP1[i] + "\t");
         }
         System.out.println("---------------------------------");
         for (int i = 0; i < 4; i++) {
-            System.out.println(vectorP2[i]+"\t");
+            System.out.println(vectorP2[i] + "\t");
         }
     }
 

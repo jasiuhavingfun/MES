@@ -6,6 +6,7 @@ public class Main {
         String test1 = "C:\\Users\\janzi\\IdeaProjects\\MES\\src\\Test1_4_4.txt";
         String test2 = "C:\\Users\\janzi\\IdeaProjects\\MES\\src\\Test2_4_4_MixGrid.txt";
         String test3 = "C:\\Users\\janzi\\IdeaProjects\\MES\\src\\Test3_31_31_kwadrat.txt";
+
         GlobalData globalData = new GlobalData();
         globalData.read(test1);
 
@@ -14,10 +15,16 @@ public class Main {
         //grid.printNodes();
 
         Element4 element4 = new Element4();
-        //element4.calculate(3);
+//        element4.calculate(3);
+//        for (int i = 0; i < 9; i++) {
+//            for (int j = 0; j < 4; j++) {
+//                System.out.print(element4.eta.get(i).get(j)+"\t");
+//            }
+//            System.out.println();
+//        }
 
         MatrixH matrixH = new MatrixH();
-        matrixH.calculateH(element4, globalData, grid, 2);
+        matrixH.calculateH(element4, globalData, grid, 4);
 
 //        System.out.println("-------------------------------------------");
 //        for (int i = 0; i < 16; i++) {
@@ -32,14 +39,31 @@ public class Main {
 //            System.out.println();
 //        }
 
+        DecimalFormat dec = new DecimalFormat("#0.000");
 
-//        DecimalFormat dec = new DecimalFormat("#0.00");
 //        for (int i = 0; i < grid.Nodes_number; i++) {
 //            for (int j = 0; j < grid.Nodes_number; j++) {
-//                System.out.print(dec.format(matrixH.globalH[i][j]) +"\t");
+//                System.out.print(dec.format(matrixH.globalC[i][j]) +"\t");
 //            }
 //            System.out.println();
 //        }
+
+
+        double[][] finito = new double[16][16];
+        for (int i = 0; i < grid.Nodes_number; i++) {
+            for (int j = 0; j < grid.Nodes_number; j++) {
+                finito[i][j] = matrixH.globalC[i][j] / globalData.SimulationStepTime;
+                finito[i][j] += matrixH.globalH[i][j];
+            }
+        }
+
+
+        for (int i = 0; i < grid.Nodes_number; i++) {
+            for (int j = 0; j < grid.Nodes_number; j++) {
+                System.out.print(dec.format(finito[i][j]) + "\t");
+            }
+            System.out.println();
+        }
 
 
 //        Node one = new Node();
@@ -54,12 +78,6 @@ public class Main {
 //
 //        side.matrix(4, one, two, globalData);
 
-//        for (int i = 0; i < grid.Nodes_number; i++) {
-//            for (int j = 0; j < grid.Nodes_number; j++) {
-//                System.out.print(dec.format(matrixH.Hglobal.get(i).get(j)) +"\t");
-//            }
-//            System.out.println();
-//        }
         //System.out.println(element4.eta);
         //System.out.println(element4.ksi);
     }
