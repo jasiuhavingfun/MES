@@ -49,21 +49,66 @@ public class Main {
 //        }
 
 
-        double[][] finito = new double[16][16];
+        double[][] HCt = new double[16][16]; // dynamiczne powiino byc
+        double[][] Ct = new double[16][16]; // dynamiczne powiino byc
+        double[] Ctt = new double[16]; // dynamiczne powiino byc
+        double[] t0 = new double[16]; // dynamiczne powiino byc
+
+        for (int i = 0; i < grid.Nodes_number; i++) {
+            t0[i] = globalData.InitialTemp;
+        }
+
         for (int i = 0; i < grid.Nodes_number; i++) {
             for (int j = 0; j < grid.Nodes_number; j++) {
-                finito[i][j] = matrixH.globalC[i][j] / globalData.SimulationStepTime;
-                finito[i][j] += matrixH.globalH[i][j];
+                HCt[i][j] = (matrixH.globalC[i][j] / globalData.SimulationStepTime)+matrixH.globalH[i][j];
+                Ct[i][j] = matrixH.globalC[i][j] / globalData.SimulationStepTime;
             }
         }
 
-
         for (int i = 0; i < grid.Nodes_number; i++) {
             for (int j = 0; j < grid.Nodes_number; j++) {
-                System.out.print(dec.format(finito[i][j]) + "\t");
+                Ctt[i] += Ct[i][j] * t0[i];
             }
-            System.out.println();
+            Ctt[i] += matrixH.globalVectorP[i];
         }
+
+//        for (int i = 0; i < grid.Nodes_number; i++) {
+//            System.out.println(Ctt[i]);
+//        }
+
+        int times = globalData.SimulationTime / globalData.SimulationStepTime;
+
+        GaussianElimination gaussianElimination = new GaussianElimination();
+
+        gaussianElimination.solve(HCt, Ctt);
+
+//        System.out.println("-------------------");
+//        for (int i = 0; i < grid.Nodes_number; i++) {
+//            System.out.print(dec.format(gaussianElimination.t1.get(i))+"\t");
+//        }
+
+
+
+        for (int k = 0; k < times; k++) {
+            //System.out.println(k);
+            for (int i = 0; i < grid.Nodes_number; i++) {
+                Ctt[i]=0;
+            }
+            for (int i = 0; i < grid.Nodes_number; i++) {
+                for (int j = 0; j < grid.Nodes_number; j++) {
+                    Ctt[i] += Ct[i][j] * gaussianElimination.t1.get(i);
+                }
+                Ctt[i] += matrixH.globalVectorP[i];
+            }
+            gaussianElimination.solve(HCt,Ctt);
+        }
+
+//        for (int i = 0; i < grid.Nodes_number; i++) {
+//            for (int j = 0; j < grid.Nodes_number; j++) {
+//                System.out.print(dec.format(HCt[i][j]) + "\t");
+//            }
+//            System.out.println();
+//        }
 
 
 //        Node one = new Node();
