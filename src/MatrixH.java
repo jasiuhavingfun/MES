@@ -5,13 +5,15 @@ import java.util.List;
 
 public class MatrixH {
     public double[][] H = new double[4][4];
-    List<List<Double>> Ncalc = new ArrayList<>();
-    List<Double> detJarr = new ArrayList<>();
+    private List<List<Double>> Ncalc = new ArrayList<>();
+    private List<Double> detJarr = new ArrayList<>();
     public double[][] C = new double[4][4];
-    public double[][] globalH = new double[16][16]; // to na dynamiczne
-    public double[][] globalC = new double[16][16]; // to na dynamiczne
-    public double[] globalVectorP = new double[16]; // to dynamicznie
-    public List<List<Double>> Hglobal = new ArrayList<>();
+    public double[][] globalH = new double[961][961]; // to na dynamiczne
+    public double[][] globalC = new double[961][961]; // to na dynamiczne
+    public double[] globalVectorP = new double[961]; // to dynamicznie
+    public List<List<Double>> globalH_list = new ArrayList<>();
+    public List<List<Double>> globalC_list = new ArrayList<>();
+    public List<Double> globalVectorP_list = new ArrayList<>();
     List<Matrix> matrixList = new ArrayList<>();
 
     private double kN(int number, double ksi, double eta) {
@@ -71,11 +73,12 @@ public class MatrixH {
                 for (int a = 0; a < 4; a++) {
                     for (int b = 0; b < 4; b++) {
                         for (int k = 0; k < 4; k++) {
-                            this.H[b][k] += matrixList.get(a).H[b][k];
+                            //this.H[b][k] += matrixList.get(a).H[b][k];
                             this.C[b][k] += Ncalc.get(b).get(a) * Ncalc.get(k).get(a) * detJarr.get(a) * globalData.Density * globalData.SpecificHeat;
                         }
                     }
                 }
+
 
                 //printClocal();
                 //printHlocal();
@@ -104,7 +107,8 @@ public class MatrixH {
                     if (a > 5) pom = 2;
                     for (int b = 0; b < 4; b++) {
                         for (int k = 0; k < 4; k++) {
-                            this.H[b][k] += matrixList.get(a).H[b][k] * SC.W3[a % 3] * SC.W3[pom];
+                            //this.H[b][k] += matrixList.get(a).H[b][k] * SC.W3[a % 3] * SC.W3[pom];
+                            //this.H[b][k] *= SC.W3[a % 3] * SC.W3[pom];
                             this.C[b][k] += Ncalc.get(b).get(a) * Ncalc.get(k).get(a) * detJarr.get(a) * globalData.Density * globalData.SpecificHeat * SC.W3[a % 3] * SC.W3[pom];
                         }
                         //System.out.println(SC.W3[a % 3] +"\t"+ SC.W3[pom]);
@@ -136,7 +140,7 @@ public class MatrixH {
                     if (a > 11) pom = 3;
                     for (int b = 0; b < 4; b++) {
                         for (int k = 0; k < 4; k++) {
-                            this.H[b][k] += matrixList.get(a).H[b][k] * SC.W4[a % 4] * SC.W4[pom];
+                            //this.H[b][k] += matrixList.get(a).H[b][k] * SC.W4[a % 4] * SC.W4[pom];
                             this.C[b][k] += Ncalc.get(b).get(a) * Ncalc.get(k).get(a) * detJarr.get(a) * globalData.Density * globalData.SpecificHeat * SC.W4[a % 4] * SC.W4[pom];
                         }
                     }
@@ -204,9 +208,15 @@ public class MatrixH {
     }
 
     private void agregacja(Grid grid, int i) {
+
+        for (int j = 0; j < grid.Nodes_number; j++) {
+            this.globalVectorP_list.add(.0);
+        }
+
         for (int k = 0; k < 4; k++) {
-            //List<Double> arrayForGlobalH = new ArrayList<>();
+
             for (int l = 0; l < 4; l++) {
+                //arrayForH.set(grid.Elements.get(i).ID[l] - 1, arrayForH.get(grid.Elements.get(i).ID[l] - 1)+this.H[k][l]);
                 //System.out.print(this.H[k][l] + "\t");
                 //this.Hglobal.get(grid.Elements.get(i).ID[k] - 1).add(grid.Elements.get(i).ID[l] - 1, this.Hglobal.get(grid.Elements.get(i).ID[k] - 1).get(grid.Elements.get(i).ID[l] - 1) + this.H[k][l]);
                 this.globalH[grid.Elements.get(i).ID[k] - 1][grid.Elements.get(i).ID[l] - 1] += this.H[k][l];
@@ -214,8 +224,11 @@ public class MatrixH {
                 this.C[k][l] = 0;
                 this.H[k][l] = 0;
             }
+
+            this.globalVectorP_list.set(grid.Elements.get(i).ID[k] - 1, this.globalVectorP_list.get(grid.Elements.get(i).ID[k] - 1)+ grid.Elements.get(i).vectorP[k]);
             this.globalVectorP[grid.Elements.get(i).ID[k] - 1] += grid.Elements.get(i).vectorP[k];
         }
+
     }
 
     private void printHlocal() {
@@ -248,6 +261,8 @@ public class MatrixH {
             y[j] = grid.Nodes.get(grid.Elements.get(i).ID[j] - 1).y;
         }
 
+        Matrix test = new Matrix();
+
         for (int j = 0; j < number * number; j++) {
 
             Matrix matrix = new Matrix();
@@ -262,6 +277,8 @@ public class MatrixH {
             }
 
             detJ = (J[0][0] * J[1][1]) - (J[1][0] * J[0][1]);
+
+            //System.out.println(detJ);
 
             detJarr.add(j, detJ);
 
@@ -296,7 +313,7 @@ public class MatrixH {
             }
 
 //            System.out.println("-----------------------------------");
-//            for (int k = 0; k < 16; k++) {
+//            for (int k = 0; k < 4; k++) {
 //                for (int l = 0; l < 4; l++) {
 //                    System.out.print(dNdY.get(k).get(l)+"\t");
 //                }
@@ -307,7 +324,6 @@ public class MatrixH {
                 for (int m = 0; m < 4; m++) {
                     matrix.H[l][m] = (dNdX.get(j).get(m) * dNdX.get(j).get(l) + dNdY.get(j).get(m) * dNdY.get(j).get(l)) * detJ * globalData.Conductivity;
                 }
-
             }
 //            System.out.println("---------------------------------------------------------");
 //            for (int l = 0; l < 4; l++) {
@@ -317,9 +333,55 @@ public class MatrixH {
 //                System.out.println();
 //            }
 
+            int pom =0;
+            if (number ==2){
+                for (int l = 0; l < 4; l++) {
+                    for (int m = 0; m < 4; m++) {
+                        test.H[l][m]+=matrix.H[l][m];
+                    }
+
+                }
+            }
+            if(number == 3){
+                if (j > 2) pom = 1;
+                if (j > 5) pom = 2;
+                for (int l = 0; l < 4; l++) {
+                    for (int m = 0; m < 4; m++) {
+                        test.H[l][m]+=matrix.H[l][m]* SC.W3[j % 3] * SC.W3[pom];
+                    }
+
+                }
+            }
+            if(number==4){
+                if (j > 3) pom = 1;
+                if (j > 7) pom = 2;
+                if (j > 11) pom = 3;
+                for (int l = 0; l < 4; l++) {
+                    for (int m = 0; m < 4; m++) {
+                        test.H[l][m]+=matrix.H[l][m]* SC.W4[j % 4] * SC.W4[pom];
+                    }
+
+                }
+            }
+
             matrixList.add(matrix);
 
+        }
+//        System.out.println("---------------------------------------------------------");
+//        for (int l = 0; l < 4; l++) {
+//            for (int m = 0; m < 4; m++) {
+//                System.out.print(test.H[l][m]+"\t");
+//            }
+//            System.out.println();
+//        }
+        for (int l = 0; l < 4; l++) {
+            for (int m = 0; m < 4; m++) {
+                this.H[l][m]=test.H[l][m];
+                test.H[l][m]=0;
+            }
 
         }
+
+
     }
 }

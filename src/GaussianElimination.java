@@ -5,8 +5,13 @@ import java.util.Scanner;
 /** Class GaussianElimination **/
 public class GaussianElimination {
     List<Double> t1 = new ArrayList<>();
-    public void solve(double[][] A, double[] B) {
+    public void solve(double[][] A, Double[] B) {
+
         int N = B.length;
+//        for (int i = 0; i < N; i++) {
+//            t1.add(i, 0.0);
+//        }
+        t1.clear();
         for (int k = 0; k < N; k++) {
             /** find pivot row **/
             int max = k;
@@ -48,7 +53,7 @@ public class GaussianElimination {
             t1.add(i, solution[i]);
         }
         /** Print solution **/
-        printSolution(solution);
+        //printSolution(solution);
     }
 
     /**
