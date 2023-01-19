@@ -68,16 +68,6 @@ public class Element4 {
         if (numberOfArrays == 16) {
             calc(numberOfArrays, PC16ksi, PC16eta);
         }
-
-//        for (int i = 0; i < numberOfArrays; i++) {
-//            for (int j = 0; j < 4; j++) {
-//                System.out.print(ksi.get(i).get(j)+"\t");
-//            }
-//            System.out.println();
-//        }
-
-//        System.out.println(ksi);
-//        System.out.println(eta);
     }
 
     private void calc(int numberOfArrays, double[] pc16ksi, double[] pc16eta) {

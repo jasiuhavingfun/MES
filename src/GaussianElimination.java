@@ -11,9 +11,7 @@ public class GaussianElimination {
     public void solve(double[][] A, Double[] B) {
 
         int N = B.length;
-//        for (int i = 0; i < N; i++) {
-//            t1.add(i, 0.0);
-//        }
+
         t1.clear();
         for (int k = 0; k < N; k++) {
             /** find pivot row **/

@@ -119,9 +119,6 @@ public class Side {
             calcVerctorPC2(globalData, NforPC1, NforPC2, detJ, vectorP4);
             calcSidePC2(globalData, NforPC1, NforPC2, detJ, side4);
 
-
-            //printVectors(vectorP1, vectorP2);
-            //printVectors(vectorP3, vectorP4);
 //            printSide(side1);
 //            printSide(side2);
 //            printSide(side3);
