@@ -2,9 +2,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-/** Class GaussianElimination **/
+/**
+ * Class GaussianElimination
+ **/
 public class GaussianElimination {
     List<Double> t1 = new ArrayList<>();
+
     public void solve(double[][] A, Double[] B) {
 
         int N = B.length;

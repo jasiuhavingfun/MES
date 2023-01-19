@@ -5,8 +5,7 @@ import java.util.List;
 
 public class Main {
 
-    public static Double findMin(List<Double> list)
-    {
+    public static Double findMin(List<Double> list) {
 
         // check list is empty or not
         if (list == null || list.size() == 0) {
@@ -19,8 +18,7 @@ public class Main {
 
     // function return maximum value in an unsorted
     // list in Java using Collection
-    public static Double findMax(List<Double> list)
-    {
+    public static Double findMax(List<Double> list) {
 
         // check list is empty or not
         if (list == null || list.size() == 0) {
@@ -30,6 +28,7 @@ public class Main {
         // return maximum value of the ArrayList
         return Collections.max(list);
     }
+
     public static void main(String[] args) {
 
         String test1 = "C:\\Users\\janzi\\IdeaProjects\\MES\\src\\Test1_4_4.txt";
@@ -39,8 +38,8 @@ public class Main {
         GlobalData globalData = new GlobalData();
         Grid grid = new Grid();
 
-        globalData.read(test3);
-        grid.read(test3);
+        globalData.read(test2);
+        grid.read(test2);
         //grid.printNodes();
 
         Element4 element4 = new Element4();
@@ -53,7 +52,7 @@ public class Main {
 //        }
 
         MatrixH matrixH = new MatrixH();
-        matrixH.calculateH(element4, globalData, grid, 4);
+        matrixH.calculateH(element4, globalData, grid, 2);
 
 //        System.out.println("-------------------------------------------");
 //        for (int i = 0; i < 16; i++) {
@@ -73,14 +72,14 @@ public class Main {
 //            System.out.println();
 //        }
 
-        DecimalFormat dec = new DecimalFormat("#0.0");
+        DecimalFormat dec = new DecimalFormat("#0.000");
 
-//        for (int i = 0; i < grid.Nodes_number; i++) {
-//            for (int j = 0; j < grid.Nodes_number; j++) {
-//                System.out.print(dec.format(matrixH.globalH[i][j]) +"\t");
-//            }
-//            System.out.println();
-//        }
+        for (int i = 0; i < grid.Nodes_number; i++) {
+            for (int j = 0; j < grid.Nodes_number; j++) {
+                System.out.print(dec.format(matrixH.globalC[i][j]) +"\t");
+            }
+            System.out.println();
+        }
 
 //        for (int i = 0; i < grid.Nodes_number; i++) {
 //            for (int j = 0; j < grid.Nodes_number; j++) {
@@ -102,7 +101,7 @@ public class Main {
 
         for (int i = 0; i < grid.Nodes_number; i++) {
             for (int j = 0; j < grid.Nodes_number; j++) {
-                HCt[i][j] = (matrixH.globalC[i][j] / globalData.SimulationStepTime)+matrixH.globalH[i][j];
+                HCt[i][j] = (matrixH.globalC[i][j] / globalData.SimulationStepTime) + matrixH.globalH[i][j];
                 Ct[i][j] = matrixH.globalC[i][j] / globalData.SimulationStepTime;
             }
         }
@@ -111,10 +110,10 @@ public class Main {
             Ctt_list.add(.0);
             for (int j = 0; j < grid.Nodes_number; j++) {
                 //Ctt[i] += Ct[i][j] * t0[i];
-                Ctt_list.set(i, Ctt_list.get(i)+Ct[i][j] * t0[i]);
+                Ctt_list.set(i, Ctt_list.get(i) + Ct[i][j] * t0[i]);
             }
             //Ctt[i] += matrixH.globalVectorP[i];
-            Ctt_list.set(i, Ctt_list.get(i)+matrixH.globalVectorP[i]);
+            Ctt_list.set(i, Ctt_list.get(i) + matrixH.globalVectorP[i]);
         }
 
 //        for (int i = 0; i < grid.Nodes_number; i++) {
@@ -133,7 +132,7 @@ public class Main {
 //            System.out.println();
 //        }
 
-        Double[]Ctt = new Double[Ctt_list.size()];
+        Double[] Ctt = new Double[Ctt_list.size()];
         Ctt_list.toArray(Ctt);
         gaussianElimination.solve(HCt, Ctt);
 
@@ -152,18 +151,18 @@ public class Main {
 
         for (int k = 0; k < times; k++) {
 
-            System.out.println("Time= "+(k+1)* globalData.SimulationStepTime + "\tTmin= "+ findMin(gaussianElimination.t1)+ "\tTmax= "+ findMax(gaussianElimination.t1));
+            System.out.println("Time= " + (k + 1) * globalData.SimulationStepTime + "\tTmin= " + findMin(gaussianElimination.t1) + "\tTmax= " + findMax(gaussianElimination.t1));
 
             for (int i = 0; i < grid.Nodes_number; i++) {
                 for (int j = 0; j < grid.Nodes_number; j++) {
-                    HCt[i][j] = (matrixH.globalC[i][j] / globalData.SimulationStepTime)+matrixH.globalH[i][j];
+                    HCt[i][j] = (matrixH.globalC[i][j] / globalData.SimulationStepTime) + matrixH.globalH[i][j];
                     Ct[i][j] = matrixH.globalC[i][j] / globalData.SimulationStepTime;
                 }
             }
 
             //System.out.println(k);
             for (int i = 0; i < grid.Nodes_number; i++) {
-                Ctt[i]=.0;
+                Ctt[i] = .0;
                 //System.out.println(gaussianElimination.t1.get(i));
             }
             Ctt_list.clear();
@@ -171,16 +170,16 @@ public class Main {
                 Ctt_list.add(.0);
                 for (int j = 0; j < grid.Nodes_number; j++) {
                     //Ctt[i] += Ct[i][j] * gaussianElimination.t1.get(j);
-                    Ctt_list.set(i, Ctt_list.get(i)+Ct[i][j] * gaussianElimination.t1.get(j));
+                    Ctt_list.set(i, Ctt_list.get(i) + Ct[i][j] * gaussianElimination.t1.get(j));
                 }
-                Ctt_list.set(i, Ctt_list.get(i)+matrixH.globalVectorP[i]);
+                Ctt_list.set(i, Ctt_list.get(i) + matrixH.globalVectorP[i]);
                 //Ctt[i] += matrixH.globalVectorP[i];
             }
 //            for (int i = 0; i < grid.Nodes_number; i++) {
 //                System.out.print(dec.format(Ctt[i])+"\t");
 //            }
             Ctt_list.toArray(Ctt);
-            gaussianElimination.solve(HCt,Ctt);
+            gaussianElimination.solve(HCt, Ctt);
         }
 
 //        for (int i = 0; i < grid.Nodes_number; i++) {
