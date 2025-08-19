@@ -1,4 +1,4 @@
-# METODA ELEMENTÓW SKOŃCZONYCH (MES)
+# Finite Element Method (FEM)
 
 ## 📖 Overview
 
